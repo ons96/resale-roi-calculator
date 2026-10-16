@@ -1,0 +1,27 @@
+[project]
+name = "resale-roi-calculator"
+version = "1.0.0"
+description = "FastAPI service computing resale ROI / under-overvalue verdicts for marketplace flips (FB Marketplace / Kijiji style)."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "pydantic>=2.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["app"]
