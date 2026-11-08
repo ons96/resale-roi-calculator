@@ -31,7 +31,7 @@ class ROIResult:
     net_profit: float
     roi_pct: float
     annualized_roi_pct: float | None
-    break_even_sell_price: float
+    break_even_sell_price: float | None
     verdict: str
 
 
@@ -39,8 +39,10 @@ def compute_roi(deal: DealInput) -> ROIResult:
     """Compute profit, ROI, break-even and a verdict for a resale deal.
 
     ROI is net profit divided by total out-of-pocket cost (buy price plus all
-    fees and costs), expressed as a percentage. Annualized ROI compounds the
-    hold period to a 365-day basis and is None when hold_days is zero.
+    fees and costs), expressed as a percentage. Annualized ROI linearly scales
+    the hold-period return to a 365-day basis; it does not assume compounding.
+    It is None when hold_days is zero. Break-even is None when platform fees
+    consume all sale proceeds, making break-even impossible.
     """
     total_cost = (
         deal.buy_price
@@ -62,7 +64,7 @@ def compute_roi(deal: DealInput) -> ROIResult:
     if fee_factor > 0:
         break_even = (total_cost) / fee_factor
     else:
-        break_even = float("inf")
+        break_even = None
 
     if roi_pct >= STRONG_ROI_PCT:
         verdict = "strong"
@@ -78,7 +80,7 @@ def compute_roi(deal: DealInput) -> ROIResult:
         net_profit=round(net_profit, 2),
         roi_pct=round(roi_pct, 2),
         annualized_roi_pct=round(annualized, 2) if annualized is not None else None,
-        break_even_sell_price=round(break_even, 2),
+        break_even_sell_price=round(break_even, 2) if break_even is not None else None,
         verdict=verdict,
     )
 

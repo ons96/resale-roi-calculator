@@ -59,6 +59,12 @@ def test_break_even():
     assert r.break_even_sell_price == 111.11
 
 
+def test_full_platform_fee_has_no_break_even():
+    r = compute_roi(DealInput(buy_price=100, sell_price=150, platform_fee_pct=100))
+    assert r.break_even_sell_price is None
+    assert r.net_profit == -100
+
+
 def test_scan_undervalued():
     _, v = scan_deal(DealInput(buy_price=100, sell_price=130))
     assert v == "undervalued"
