@@ -75,6 +75,17 @@ def test_validation_rejects_negative_price(client):
     assert r.status_code == 422
 
 
+@pytest.mark.parametrize("endpoint,payload", [
+    ("/v1/roi", {"buy_price": 100, "sell_price": 150}),
+    ("/v1/scan", {"asking_price": 100, "expected_resale_price": 150}),
+])
+def test_full_platform_fee_returns_json_null(client, endpoint, payload):
+    r = client.post(endpoint, json={**payload, "platform_fee_pct": 100}, headers=_auth(client))
+    assert r.status_code == 200
+    assert r.json()["break_even_sell_price"] is None
+    assert r.json()["net_profit"] == -100
+
+
 def test_rate_limit_429(client):
     codes = []
     for _ in range(12):  # free plan = 10/min

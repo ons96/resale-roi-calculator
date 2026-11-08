@@ -63,7 +63,7 @@ class ROIResponse(BaseModel):
     net_profit: float
     roi_pct: float
     annualized_roi_pct: float | None
-    break_even_sell_price: float
+    break_even_sell_price: float | None
     verdict: str
 
 

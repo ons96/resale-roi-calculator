@@ -53,6 +53,11 @@ Response:
 `/v1/scan` takes `asking_price` + `expected_resale_price` and adds
 `market_verdict`: `undervalued` (ROI >= 20%), `fair` (>= 5%), `overvalued`.
 
+`break_even_sell_price` is `null` when the platform fee is 100%: no sale
+price can recover the purchase cost. Annualized ROI is a simple, linear
+projection (`roi_pct * 365 / hold_days`), not a compounded return; it is
+`null` when `hold_days` is zero.
+
 ## Verdict thresholds
 
 - `strong` ROI >= 30%
